@@ -14,6 +14,7 @@
 "="                   return "EQU"
 [0-9]+("."[0-9]+)?    return 'NUMBER'
 [a-zA-Z]+("_"[0-9a-zA-Z]+)? return 'WORD'
+\"[^\"]*\"            return 'STRING'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -91,6 +92,8 @@ factor:
   NUMBER {$$ = parseFloat($1)}
   |
   WORD {$$ = $1}
+  |
+  STRING {$$ = $1.slice(1, -1)}
   |
   LP statement RP {$$ = $2}
   ;
