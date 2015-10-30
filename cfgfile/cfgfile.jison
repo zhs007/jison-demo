@@ -14,7 +14,7 @@
 "="                   return "EQU"
 [0-9]+("."[0-9]+)?    return 'NUMBER'
 [a-zA-Z]+("_"[0-9a-zA-Z]+)? return 'WORD'
-\"[^\"]*\"            return 'STRING'
+\"[^\"]*\"|\'[^\']*\' return 'STRING'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -69,7 +69,7 @@ statementexline:
   ;
 
 statementex:
-  statement EQU statement {$$ = {name: $1, val: $3}}
+  WORD EQU statement {$$ = {name: $1, val: $3}}
   ;
 
 statement:
