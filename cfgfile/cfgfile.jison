@@ -21,26 +21,44 @@
 /lex
 
 %{
+  var globalobj = [];
+
   function addComment(obj, comment) {
     obj.comment = comment.replace('\r', '').slice(2);
     return obj;
   }
 
+  function addVal(o) {
+    globalobj.push(o);
+
+    return o;
+  }
+
   function merge(o1, o2) {
-    var arr = [];
+    //var arr = [];
 
     if (o1 instanceof Array) {
       for(var k in o1) {
-        arr.push(o1[k]);
+        globalobj.push(o1[k]);
       }
     }
     else {
-      arr.push(o1);
+      globalobj.push(o1);
     }
 
-    arr.push(o2);
+    globalobj.push(o2);
 
-    return arr;
+    return globalobj;
+  }
+
+  function getValue(n) {
+    for (var i = 0; i < globalobj.length; ++i) {
+      if (globalobj[i].name == n) {
+        return globalobj[i].val;
+      }
+    }
+
+    return 0;
   }
 %}
 
@@ -59,7 +77,7 @@ expressions
 block:
   statementexline {$$ = $1}
   |
-  block statementexline {$$ = merge($1, $2)}
+  block statementexline {$$ = globalobj}
   ;
 
 statementexline:
@@ -69,7 +87,7 @@ statementexline:
   ;
 
 statementex:
-  WORD EQU statement {$$ = {name: $1, val: $3}}
+  WORD EQU statement {$$ = addVal({name: $1, val: $3})}
   ;
 
 statement:
@@ -91,7 +109,7 @@ term:
 factor:
   NUMBER {$$ = parseFloat($1)}
   |
-  WORD {$$ = $1}
+  WORD {$$ = getValue($1)}
   |
   STRING {$$ = $1.slice(1, -1)}
   |

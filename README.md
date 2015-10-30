@@ -60,11 +60,12 @@ abc = (3+9)*5 //我是注释
 
 cfgfile
 ---
-配置文件的解析，配置文件格式如下
+配置文件的解析，这个例子稍微像点样子了，支持变量赋值，支持字符串，支持行注释等。样例配置文件如下
 
 ```
 name = 'zhs007' // name
-hp = 100 + 200
+hp = 100
+maxhp = hp * 2
 info = "haha"
 ```
 
@@ -73,7 +74,8 @@ info = "haha"
 ```
 [
 {name: 'name', val: 'zhs007', comment: 'name'},
-{name: 'hp', val: 300},
+{name: 'hp', val: 100},
+{name: 'maxhp', val: 200},
 {name: 'info', val: 'haha'}
 ]
 ```

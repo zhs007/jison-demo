@@ -4,4 +4,4 @@
 
 var parser = require('./cfgfile.js');
 
-var ret = parser.parse("abc = (3+9)*5 //haha \r\n bdc = '123'");
+var ret = parser.parse("abc = (3+9)*5 //haha \r\n bdc = abc * 2");
