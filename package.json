@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./upload2oss"
+    "start": "node ./calc/demo.js"
   },
   "dependencies": {
     "jison": "*"
