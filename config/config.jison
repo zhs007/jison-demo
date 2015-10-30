@@ -3,17 +3,15 @@
 %%
 
 \s+                   /* skip whitespace */
-\n|\r\n               return "NEWLINE"
-\/\/[^\n]*            return "COMMENTLINE"
 "+"                   return "PLUS"
 "-"                   return "MINUS"
 "*"                   return "MULTIPLE"
 "/"                   return "DIVIDE"
 "("                   return "LP"
 ")"                   return "RP"
-“=”                   return “EQU”
+"="                   return "DD"
 [0-9]+("."[0-9]+)?    return 'NUMBER'
-([A-Za-z_][A-Za-z0-9_]*) return 'NAME'
+[a-z]+("_"[0-9a-z]+)? return 'WORD'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -24,12 +22,16 @@
 %% /* language grammar */
 
 expressions
-    : statement EOF
+    : statementex EOF
         {
         console.log($1);
         return $1;
         }
     ;
+
+statementex:
+  statement DD statement {$$ = {name: $1, val: $3}}
+  ;
 
 statement:
   term PLUS term {$$ = $1 + $3}
@@ -49,6 +51,8 @@ term:
 
 factor:
   NUMBER {$$ = parseFloat($1)}
+  |
+  WORD {$$ = $1}
   |
   LP statement RP {$$ = $2}
   ;
