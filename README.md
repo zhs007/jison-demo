@@ -57,3 +57,23 @@ abc = (3+9)*5 //我是注释
 ```
 { name: 'abc', val: 60, comment: '//我是注释' }
 ```
+
+cfgfile
+---
+配置文件的解析，配置文件格式如下
+
+```
+name = 'zhs007' // name
+hp = 100 + 200
+info = "haha"
+```
+
+输出
+
+```
+[
+{name: 'name', val: 'zhs007', comment: 'name'},
+{name: 'hp', val: 300},
+{name: 'info', val: 'haha'}
+]
+```
