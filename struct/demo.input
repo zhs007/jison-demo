@@ -1,0 +1,11 @@
+
+int a = 100;    // a is xixi
+
+
+// B is haha
+struct B {
+
+  int aa = a + 100; //aa is 200
+
+  string bb;
+};
