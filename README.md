@@ -79,3 +79,52 @@ info = "haha"
 {name: 'info', val: 'haha'}
 ]
 ```
+
+struct
+---
+类C++语法的结构体，强注释的，只支持行注释。样例配置文件如下
+
+```
+
+int a = 100;    // a is 100
+
+
+// B is haha
+struct B {
+
+  int aa = a + 100; //aa is 200
+
+  string bb;
+};
+```
+
+输出
+
+```
+[
+  {
+    "type": "struct",
+    "val": [
+      {
+        "type": "string",
+        "name": "bb",
+        "val": ""
+      },
+      {
+        "type": "int",
+        "name": "aa",
+        "val": 200,
+        "comment": "//aa is 200"
+      }
+    ],
+    "name": "B",
+    "comment": "// B is haha"
+  },
+  {
+    "type": "int",
+    "name": "a",
+    "val": 100,
+    "comment": "// a is xixi"
+  }
+]
+```
