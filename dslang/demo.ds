@@ -1,0 +1,93 @@
+
+int MAX_LEVEL = 80;			// 最大等级
+
+typedef int HeroExpType;	// 英雄经验类型
+
+// 英雄属性枚举，枚举必须大写，而且枚举内容必须是大写枚举加下划线开头
+enum HEROATTR{
+	HEROATTR_VIT = 0;	// 体力 - vitality
+	HEROATTR_STA = 1;	// 耐力 - stamina
+	HEROATTR_STR = 2;	// 力量 - strength
+	HEROATTR_INT = 3;	// 智力 - intelligence
+	HEROATTR_DEX = 4;	// 敏捷 - dexterity
+	HEROATTR_CRIT = 5;	// 暴击 - critical		
+	HEROATTR_PARR = 6;	// 格挡 - parry
+	HEROATTR_HIT = 7;	// 命中 - hit
+	HEROATTR_MISS = 8;	// 闪避 - miss
+};
+
+// 英雄技能枚举
+enum HEROSKILL{
+	HEROSKILL_SKILLID1 = 0;		// 普通技能1
+	HEROSKILL_SKILLID2 = 1;		// 普通技能2
+	HEROSKILL_SKILLID3 = 2;		// 普通技能3
+	
+	HEROSKILL_BSKILLID1 = 3;	// 条件技能1
+	HEROSKILL_BSKILLID2 = 4;	// 条件技能2
+	
+	HEROSKILL_MSKILLID1 = 5;	// 主动技能1
+};
+
+// 玩家经验表
+static PlayerExp{
+	primary int playerlevel;	// 玩家等级
+	
+	index int totalplayerexp;	// 玩家当前等级需要的总经验（不算当前等级需要的经验）
+	
+	int playerexp;				// 玩家当前等级升级需要的经验
+};
+
+// 英雄经验表
+static HeroExp{
+	primary0 HeroExpType heroexptype;	// 英雄经验类型
+	primary1 int herolevel;				// 英雄等级
+	
+	index int totalheroexp;				// 英雄当前等级需要的总经验（不算当前等级需要的经验）
+	
+	int heroexp;						// 英雄当前等级升级需要的经验
+};
+
+// 英雄基本配置表
+static HeroBase{
+	primary int heroid;					// 英雄唯一标识
+	
+	HeroExpType heroexptype;			// 英雄经验类型
+	
+	expand(HEROATTR) int heroattr;		// 英雄属性数组，根据HEROATTR展开
+	expand(HEROSKILL) int heroskill;	// 英雄属性数组，根据HEROSKILL展开
+};
+
+// 英雄装备信息
+struct HeroEquInfo{
+	primary int equid;					// 装备唯一标识
+};
+
+// 英雄信息
+struct HeroInfo{
+	primary int heroid;					// 英雄唯一标识
+	
+	int herolevel;						// 英雄等级
+	int heroexp;						// 英雄当前经验
+	
+	expand(HEROATTR) int heroattr;		// 英雄属性数组，根据HEROATTR展开
+	expand(HEROSKILL) int heroskill;	// 英雄属性数组，根据HEROSKILL展开
+	
+	repeated HeroEquInfo lstequ;		// 英雄列表
+};
+
+// 角色基本信息
+struct PlayerInfo{
+	primary int pid;					// 角色唯一标识
+	
+	string name;						// 角色名
+	time regtime;						// 注册时间
+	time lastlogintime;					// 最后一次登录时间
+	
+	int playerlevel;					// 角色等级
+	int playerexp;						// 角色经验
+	
+	int gold;							// 金币
+	int gem;							// 钻石	
+	
+	repeated HeroInfo lsthero;			// 英雄列表
+};
