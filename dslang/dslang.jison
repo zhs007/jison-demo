@@ -14,6 +14,12 @@
 "="                   return "EQU"
 ";"                   return "SEMI"
 "struct"              return "STRUCT"
+"primary"             return "PRIMARY"
+"primary0"            return "PRIMARY0"
+"primary1"            return "PRIMARY1"
+"expand"              return "EXPAND"
+"repeated"            return "REPEATED"
+"index"               return "INDEX"
 "static"              return "STATIC"
 "enum"                return "ENUM"
 "{"                   return "LB"
@@ -21,6 +27,7 @@
 "typedef"             return "TYPEDEF"
 "string"              return "TYPE_STRING"
 "int"                 return "TYPE_INT"
+"time"                return "TYPE_TIME"
 0|-0|-[1-9]\d*\.\d*|[1-9]\d*\.\d*|-0\.\d*|0\.\d*|[1-9]\d*|-[1-9]\d*    return 'NUMBER'
 [1-9]\d*|-[1-9]\d*    return 'NUMBER_INT'
 -[1-9]\d*\.\d*|[1-9]\d*\.\d*|-0\.\d*|0\.\d*    return 'NUMBER_FLOAT'
@@ -89,6 +96,8 @@ typestr:
   |
   TYPE_INT {$$ = {type:'int', name: $1}}
   |
+  TYPE_TIME {$$ = {type:'time', name: $1}}
+  |
   WORD_TYPE {$$ = {type:getVal($1), name: $1}}
   ;
 
@@ -101,19 +110,35 @@ codeblock:
   ;
 
 structinfo:
-  defline SEMI COMMENTLINE {$1.comment = $3; $$ = [$1]}
+  structdefline SEMI COMMENTLINE {$1.comment = $3; $$ = [$1]}
   |
-  defline SEMI COMMENTLINE structinfo {$1.comment = $3; $4.push($1); $$ = $4}
+  structdefline SEMI COMMENTLINE structinfo {$1.comment = $3; $4.push($1); $$ = $4}
   ;
 
-defline:
-  TYPE_INT WORD_VAR {$$ = {type: 'int', name: $2, val: 0}}
+structdefline:
+  typestr WORD_VAR {$$ = {type: $1.val, name: $2, val: 0}}
   |
-  TYPE_INT WORD_VAR EQU statement {$$ = {type: 'int', name: $2, val: $4}}
+  typestr WORD_VAR EQU statement {$$ = {type: $1.val, name: $2, val: $4}}
   |
-  TYPE_STRING WORD_VAR {$$ = {type: 'string', name: $2, val: ''}}
+  PRIMARY typestr WORD_VAR {$$ = {type: $2.val, name: $3, val: 0, type2: 'primary'}}
   |
-  TYPE_STRING WORD_VAR EQU statement {$$ = {type: 'string', name: $2, val: $4}}
+  PRIMARY typestr WORD_VAR EQU statement {$$ = {type: $2.val, name: $3, val: $5, type2: 'primary'}}
+  |
+  PRIMARY0 typestr WORD_VAR {$$ = {type: $2.val, name: $3, val: 0, type2: 'primary0'}}
+  |
+  PRIMARY0 typestr WORD_VAR EQU statement {$$ = {type: $2.val, name: $3, val: $5, type2: 'primary0'}}
+  |
+  PRIMARY1 typestr WORD_VAR {$$ = {type: $2.val, name: $3, val: 0, type2: 'primary1'}}
+  |
+  PRIMARY1 typestr WORD_VAR EQU statement {$$ = {type: $2.val, name: $3, val: $5, type2: 'primary1'}}
+  |
+  INDEX typestr WORD_VAR {$$ = {type: $2.val, name: $3, val: 0, type2: 'index'}}
+  |
+  INDEX typestr WORD_VAR EQU statement {$$ = {type: $2.val, name: $3, val: $5, type2: 'index'}}
+  |
+  EXPAND LP WORD_TYPE RP typestr WORD_VAR {$$ = {type: $5.val, name: $6, val: 0, type2: 'expand', expand: $3}}
+  |
+  REPEATED typestr WORD_VAR {$$ = {type: $1.val, name: $2, val: 0, type2: 'index'}}
   ;
 
 enuminfo:
